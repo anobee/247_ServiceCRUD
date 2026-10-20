@@ -54,13 +54,14 @@ app.put('/biodata/:id', (req, res) => {
                 message: 'Data berhasil di update',
                 data: result.rows[0]
             });
+        })
 
         .catch(err => {
             console.error(err);
-            res.status(500).json({
-                message: 'Terjadi kesalahan pada server'
-            });
-        }
+            res.status(500).send ('Terjadi kesalahan pada server')
+            ;
+        });
+    });
 
 
 app.listen(port, () => {
