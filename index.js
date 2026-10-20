@@ -37,6 +37,7 @@ app.post('/biodata', (req, res) => {
         .catch(err =>  console.error(err));
         });
 
+app.put('/biodata/:id', (req, res) => {
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`)
 })
