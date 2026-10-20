@@ -48,7 +48,20 @@ app.put('/biodata/:id', (req, res) => {
                 return res.status(404).json({
                     message: 'Dataa tidak di temukan'
                 });
+            }
+
+            res.json({
+                message: 'Data berhasil di update',
+                data: result.rows[0]
+            });
+
+        .catch(err => {
+            console.error(err);
+            res.status(500).json({
+                message: 'Terjadi kesalahan pada server'
+            });
         }
+
 
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`)
