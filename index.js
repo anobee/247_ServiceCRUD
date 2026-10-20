@@ -63,6 +63,11 @@ app.put('/biodata/:id', (req, res) => {
         });
     });
 
+app.delete('/biodata/:id', (req, res) => {
+    const { id } = req.params;
+
+    pool.query('DELETE FROM biodata WHERE id = $1 RETURNING *', [id])
+
 
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`)
