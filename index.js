@@ -31,6 +31,12 @@ app.get('/', (req, res) => {
 app.post('/biodata', (req, res) => {
     const { nama, nim, alamat } = req.body
 
+    pool.query('INSERT INTO biodata (nama, nim, alamat) VALUES ($1, $2, $3) RETURNING *', 
+        [nama, nim, alamat])
+        .then(result => res.json(result.rows[0]))
+        .catch(err =>  console.error(err));
+        });
+
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`)
 })
