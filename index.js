@@ -28,40 +28,62 @@ app.get('/', (req, res) => {
         })
 })
 
+
 app.post('/biodata', (req, res) => {
-    const { nama, nim, alamat } = req.body
+    const { nama, nim, kelas } = req.body;
 
-    pool.query('INSERT INTO biodata (nama, nim, alamat) VALUES ($1, $2, $3) RETURNING *', 
-        [nama, nim, alamat])
-        .then(result => res.json(result.rows[0]))
-        .catch(err =>  console.error(err));
+    if (!nama || !nim || !kelas) {
+        return res.status(400).json({
+            message: 'Nama, NIM, dan kelas wajib diisi'
         });
+    }
 
-app.put('/biodata/:id', (req, res) => {
-    const { id } = req.params
-    const { nama, nim, alamat } = req.body;
-
-    pool.query('UPDATE biodata SET nama = $1, nim = $2, alamat = $3 WHERE id = $4 RETURNING *',
-        [nama, nim, alamat, id])
-        .then(result => {
-            if (result.rowCount === 0) {
-                return res.status(404).json({
-                    message: 'Dataa tidak di temukan'
-                });
-            }
-
-            res.json({
-                message: 'Data berhasil di update',
-                data: result.rows[0]
-            });
-        })
-
-        .catch(err => {
-            console.error(err);
-            res.status(500).send ('Terjadi kesalahan pada server')
-            ;
+    pool.query(
+        'INSERT INTO biodata (nama, nim, kelas) VALUES ($1, $2, $3) RETURNING *',
+        [nama, nim, kelas]
+    )
+    .then(result => {
+        res.status(201).json({
+            message: 'Data berhasil ditambahkan',
+            data: result.rows[0]
+        });
+    })
+    .catch(err => {
+        console.error(err);
+        res.status(500).json({
+            message: 'Gagal menambahkan data',
+            error: err.message
         });
     });
+});
+
+app.put('/biodata/:id', (req, res) => {
+    const { id } = req.params;
+    const { nama, nim, kelas } = req.body;
+
+    pool.query(
+        'UPDATE biodata SET nama = $1, nim = $2, kelas = $3 WHERE id = $4 RETURNING *',
+        [nama, nim, kelas, id]
+    )
+    .then(result => {
+        if (result.rowCount === 0) {
+            return res.status(404).json({
+                message: 'Data tidak ditemukan'
+            });
+        }
+
+        res.json({
+            message: 'Data berhasil diupdate',
+            data: result.rows[0]
+        });
+    })
+    .catch(err => {
+        console.error(err);
+        res.status(500).json({
+            message: 'Terjadi kesalahan pada server'
+        });
+    });
+});
 
 app.delete('/biodata/:id', (req, res) => {
     const { id } = req.params;
