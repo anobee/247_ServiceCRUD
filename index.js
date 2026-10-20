@@ -79,8 +79,14 @@ app.delete('/biodata/:id', (req, res) => {
             message: 'Data berhasil dihapus',
             data: result.rows[0]
         });
-    }
+    })
 
+    .catch(err => {
+        console.error(err);
+        res.status(500).send('Terjadi kesalahan pada server');
+    });
+
+});
 
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`)
